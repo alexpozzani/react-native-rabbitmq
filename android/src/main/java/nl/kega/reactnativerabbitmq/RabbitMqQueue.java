@@ -28,6 +28,7 @@ public class RabbitMqQueue {
     public Boolean durable;
     public Boolean autodelete;
     public Boolean autoack;
+	public Boolean consume;
     public ReadableMap consumer_arguments;
        
     private ReactApplicationContext context;
@@ -45,21 +46,20 @@ public class RabbitMqQueue {
         this.durable = (queue_config.hasKey("durable") ? queue_config.getBoolean("durable") : true);
         this.autodelete = (queue_config.hasKey("autoDelete") ? queue_config.getBoolean("autoDelete") : false);
         this.autoack = (queue_config.hasKey("autoAck") ? queue_config.getBoolean("autoAck") : false);
-
+        this.consume = (queue_config.hasKey("consume") ? queue_config.getBoolean("consume") : true);
         this.consumer_arguments = (queue_config.hasKey("consumer_arguments") ? queue_config.getMap("consumer_arguments") : null);
      
         Map<String, Object> args = toHashMap(arguments);
 
         try {
-            RabbitMqConsumer consumer = new RabbitMqConsumer(this.channel, this);
 
             Map<String, Object> consumer_args = toHashMap(this.consumer_arguments);
-
             this.channel.queueDeclare(this.name, this.durable, this.exclusive, this.autodelete, args);
-            this.channel.basicConsume(this.name, this.autoack, consumer_args, consumer);
 
-         
-
+			if (this.consume) {
+				RabbitMqConsumer consumer = new RabbitMqConsumer(this.channel, this);
+				this.channel.basicConsume(this.name, this.autoack, consumer_args, consumer);
+			}
         } catch (Exception e){
             Log.e("RabbitMqQueue", "Queue error " + e);
             e.printStackTrace();

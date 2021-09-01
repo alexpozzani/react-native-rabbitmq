@@ -2,31 +2,12 @@
 
 ## Installation
 
-
-
-## RN 0.60 >
-
-## IOS
-npm install react-native-rabbitmq --save
-
-cd ./ios
-
-change in the Podfile line 1:
-platform :ios, '9.0' to platform :ios, '10.0'
-
-pod install
-
-## Android
-
-npm install react-native-rabbitmq --save
-
-## RN 0.60 <
-
 ## IOS
 
-npm install react-native-rabbitmq --save
+npm install react-native-rabbitmq2 --save
 
  Installation with CocoaPods
+ New fix for react-native 0.63.2
 
 1. In the Podfile uncomment "use_frameworks" (Optional):
 
@@ -93,14 +74,14 @@ react-native link
 
 ## Android
 
-npm install react-native-rabbitmq --save
+npm install react-native-rabbitmq2 --save
 
 react-native link
 
 
 ## Usage
 ```
-import { Connection, Exchange, Queue } from 'react-native-rabbitmq';
+import { Connection, Exchange, Queue } from 'react-native-rabbitmq2';
 
 const config = {
 	host:'',
@@ -126,8 +107,6 @@ connection.on('connected', (event) => {
 		durable: true,
 		exclusive: false,
 		consumer_arguments: {'x-priority': 1}
-	}, {
-	// queueDeclare args here like x-message-ttl
 	});
 
 	let exchange = new Exchange(connection, {

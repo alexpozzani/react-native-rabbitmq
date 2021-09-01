@@ -1,37 +1,27 @@
 {
-  "author": {
-    "name": "Tim Honders"
-  },
-  "bugs": {
-    "url": "https://github.com/kegaretail/react-native-rabbitmq/issues"
-  },
-  "bundleDependencies": false,
-  "dependencies": {},
-  "deprecated": false,
+  "name": "react-native-rabbitmq2",
+  "version": "0.6.1",
   "description": "A RabbitMq component for React Native.",
-  "devDependencies": {},
-  "directories": {},
-  "homepage": "https://github.com/kegaretail/react-native-rabbitmq",
-  "keywords": [
-    "react-native",
-    "react",
-    "RabbitMq"
-  ],
-  "license": "MIT",
   "main": "index.js",
-  "maintainers": [
-    {
-      "name": "timhonders",
-      "email": "tim.honders@kega.nl"
-    }
-  ],
-  "name": "react-native-rabbitmq",
-  "nativePackage": true,
-  "optionalDependencies": {},
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kegaretail/react-native-rabbitmq.git"
+    "url": "git+https://github.com/alexpozzani/react-native-rabbitmq.git"
   },
-  "scripts": {},
-  "version": "0.6.7"
+  "keywords": [
+    "react",
+    "native",
+    "rabbitmq"
+  ],
+  "author": "Alex Pozzani",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/alexpozzani/react-native-rabbitmq/issues"
+  },
+  "homepage": "https://github.com/alexpozzani/react-native-rabbitmq#readme"
 }
