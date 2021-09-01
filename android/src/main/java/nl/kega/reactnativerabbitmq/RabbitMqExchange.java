@@ -41,7 +41,9 @@ public class RabbitMqExchange {
 
         try {
 
-            this.channel.exchangeDeclare(this.name, this.type, this.durable, this.autodelete, this.internal, args);
+            if (!"".equals(this.name)) {
+                this.channel.exchangeDeclare(this.name, this.type, this.durable, this.autodelete, this.internal, args);
+            }
 
         } catch (Exception e){
             Log.e("RabbitMqExchange", "Exchange error " + e);
@@ -113,7 +115,9 @@ public class RabbitMqExchange {
 
     public void delete(Boolean ifUnused){ 
         try {
-            this.channel.exchangeDelete(this.name, ifUnused);
+            if (!"".equals(this.name)) {
+                this.channel.exchangeDelete(this.name, ifUnused);
+            }
         } catch (Exception e){
             Log.e("RabbitMqExchange", "Exchange delete error " + e);
             e.printStackTrace();

@@ -359,22 +359,24 @@ RCT_EXPORT_METHOD(addExchange:(NSDictionary *) config)
         options = options | RMQExchangeDeclareNoWait;
     }
 
+    NSString *name = [config objectForKey:@"name"];
+    if ([type isEqualToString:@""]) {
+	} else {
+		NSString *type = [config objectForKey:@"type"];
 
-    NSString *type = [config objectForKey:@"type"];
+		RMQExchange *exchange = nil;
+		if ([type isEqualToString:@"fanout"]) {
+			exchange = [self.channel fanout:[config objectForKey:@"name"] options:options];
+		}else if ([type isEqualToString:@"direct"]) {
+			exchange = [self.channel direct:[config objectForKey:@"name"] options:options];
+		}else if ([type isEqualToString:@"topic"]) {
+			exchange = [self.channel topic:[config objectForKey:@"name"] options:options];
+		}
 
-    RMQExchange *exchange = nil;
-    if ([type isEqualToString:@"fanout"]) {
-        exchange = [self.channel fanout:[config objectForKey:@"name"] options:options];
-    }else if ([type isEqualToString:@"direct"]) {
-        exchange = [self.channel direct:[config objectForKey:@"name"] options:options];
-    }else if ([type isEqualToString:@"topic"]) {
-        exchange = [self.channel topic:[config objectForKey:@"name"] options:options];
-    }
-
-    if (exchange != nil){
-        [self.exchanges addObject:exchange];
-    }
-
+		if (exchange != nil){
+			[self.exchanges addObject:exchange];
+		}
+	}
 }
 
 RCT_EXPORT_METHOD(publishToExchange:(NSString *)message exchange_name:(NSString *)exchange_name routing_key:(NSString *)routing_key message_properties:(NSDictionary *)message_properties)
