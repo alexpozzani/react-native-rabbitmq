@@ -58,8 +58,11 @@ public class RabbitMqQueue {
             this.channel.queueDeclare(this.name, this.durable, this.exclusive, this.autodelete, args);
             this.channel.basicConsume(this.name, this.autoack, consumer_args, consumer);
 
-         
-
+			if (this.consume) {
+				RabbitMqConsumer consumer = new RabbitMqConsumer(this.channel, this);
+				this.channel.basicConsume(this.name, this.autoack, consumer_args, consumer);
+			}
+			
         } catch (Exception e){
             Log.e("RabbitMqQueue", "Queue error " + e);
             e.printStackTrace();
@@ -99,21 +102,21 @@ public class RabbitMqQueue {
             e.printStackTrace();
         }
     }
-    /*
-    public void publish(String message, String routing_key){ 
+
+    public void publish(String exchange, String routing_key, String message){ 
         try {
             byte[] message_body_bytes = message.getBytes();
 
             AMQP.BasicProperties properties = new AMQP.BasicProperties();
             //properties.setExpiration("60000");
        
-            this.channel.basicPublish(this.exchange_name, routing_key, properties, message_body_bytes);
+            this.channel.basicPublish(exchange, routing_key, properties, message_body_bytes);
         } catch (Exception e){
             Log.e("RabbitMqQueue", "Queue publish error " + e);
             e.printStackTrace();
         }
     }
-    */
+
     public void purge(){ 
         try {
             //this.channel.queuePurge(this.name, true); 
