@@ -97,7 +97,7 @@ RCT_EXPORT_MODULE();
 				}
 
 				if (body == nil) {
-					body = @"编码解析出错";
+					body = @"";
 				}
 
 
@@ -325,6 +325,18 @@ RCT_EXPORT_METHOD(basicAck:(NSString *)queue_name delivery_tag:(nonnull NSNumber
     }
 }
 
+RCT_EXPORT_METHOD(publishToQueue:(NSString *)message routing_key:(NSString *)routing_key)
+{
+
+    id queue_id = [self findQueue:routing_key];
+
+    if (queue_id != nil){
+        NSData* data = [message dataUsingEncoding:NSUTF8StringEncoding];
+		[channel.defaultExchange publish:data routingKey:routing_key];
+    }
+}
+
+
 RCT_EXPORT_METHOD(cancelConsumer:(NSString *)queue_name)
 {
     id queue_id = [self findQueue:queue_name];
@@ -360,7 +372,7 @@ RCT_EXPORT_METHOD(addExchange:(NSDictionary *) config)
     }
 
     NSString *name = [config objectForKey:@"name"];
-    if ([type isEqualToString:@""]) {
+    if ([name isEqualToString:@""]) {
 	} else {
 		NSString *type = [config objectForKey:@"type"];
 

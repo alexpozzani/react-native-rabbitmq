@@ -1,6 +1,6 @@
 {
   "name": "react-native-rabbitmq2",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "description": "A RabbitMq component for React Native.",
   "main": "index.js",
   "directories": {

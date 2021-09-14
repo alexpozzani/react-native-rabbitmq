@@ -251,20 +251,18 @@ class RabbitMqConnection extends ReactContextBaseJavaModule  {
      
     }
 
-    /*
     @ReactMethod
-    public void publishToQueue(String message, String exchange_name, String routing_key) {
+    public void publishToQueue(String message, String routing_key) {
 
         for (RabbitMqQueue queue : queues) {
-		    if (Objects.equals(exchange_name, queue.exchange_name)){
+		    if (queue.routing_key.equals(routing_key)){
                 Log.e("RabbitMqConnection", "publish " + message);
-                queue.publish(message, exchange_name);
+                queue.publish(message, routing_key);
                 return;
             }
 		}
 
     }
-    */
 
     @ReactMethod
     public void addExchange(ReadableMap exchange_config) {
