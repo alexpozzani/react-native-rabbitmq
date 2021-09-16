@@ -93,7 +93,7 @@ class RabbitMqConnection extends ReactContextBaseJavaModule  {
             event.putString("name", "connected");
 
             this.context.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit("RabbitMqConnectionEvent", event);
-        }else{ 
+        }else{
 
             try {
                 this.connection = (RecoverableConnection)this.factory.newConnection();
@@ -141,6 +141,7 @@ class RabbitMqConnection extends ReactContextBaseJavaModule  {
                    
 
                     this.channel = connection.createChannel();
+                    
                     this.channel.basicQos(1);
 
                     this.channel.addConfirmListener(new ConfirmListener() {

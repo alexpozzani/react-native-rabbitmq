@@ -332,7 +332,7 @@ RCT_EXPORT_METHOD(publishToQueue:(NSString *)message routing_key:(NSString *)rou
 
     if (queue_id != nil){
         NSData* data = [message dataUsingEncoding:NSUTF8StringEncoding];
-		[channel.defaultExchange publish:data routingKey:routing_key];
+		[self.channel.defaultExchange publish:data routingKey:routing_key];
     }
 }
 
