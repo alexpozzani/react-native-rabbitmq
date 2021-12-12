@@ -238,22 +238,42 @@ RCT_EXPORT_METHOD(connect)
         protocol = @"amqps";
     }
 
-    NSString *uri = [NSString stringWithFormat:@"%@://%@:%@@%@:%@/%@", protocol, self.config[@"username"], self.config[@"password"], self.config[@"host"], self.config[@"port"], self.config[@"virtualhost"]];
+    NSString *uri = [NSString stringWithFormat:@"%@://%@:%@@%@:%@/%@", protocol, self.config[@"username"], self.config[@"password"], self.config[@"host"], self.config[@"port"], self.config[@"virtualhost"]];        
+    if ([self.config objectForKey:@"ssl"] != nil && [[self.config objectForKey:@"ssl"] boolValue]){
+        NSData *cert = [[NSData alloc] initWithBase64EncodedString:self.config[@"pck12Base64"]  options:0];
 
+        self.connection = [[RMQConnection alloc] initWithUri:uri
+                                                  tlsOptions: [[RMQTLSOptions alloc]
+                                                               initWithPeerName: self.config[@"host"]
+                                                               verifyPeer: false
+                                                               pkcs12: cert
+                                                               pkcs12Password: self.config[@"pck12Pwd"]
+                                                               ]
+                                                  channelMax:@65535
+                                                    frameMax:@(131072)
+                                                   heartbeat:@10
+                                              connectTimeout:@15
+                                                 readTimeout:@30
+                                                writeTimeout:@30
+                                                 syncTimeout:@10
+                                                    delegate:delegate
+                                               delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
+        
+    } else {
+        self.connection = [[RMQConnection alloc] initWithUri:uri
+                                                  channelMax:@65535
+                                                    frameMax:@(131072)
+                                                   heartbeat:@10
+                                              connectTimeout:@15
+                                                 readTimeout:@30
+                                                writeTimeout:@30
+                                                 syncTimeout:@10
+                                                    delegate:delegate
+                                               delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
+    }
 
-    self.connection = [[RMQConnection alloc] initWithUri:uri
-                                              channelMax:@65535
-                                                frameMax:@(131072)
-                                               heartbeat:@10
-										  connectTimeout:@15
-											 readTimeout:@30
-										    writeTimeout:@30
-                                             syncTimeout:@10
-                                                delegate:delegate
-                                           delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
-
-    [self.connection start:^{
-
+    [self.connection start:^{ 
+        
         self.connected = true;
 
         [EventEmitter emitEventWithName:@"RabbitMqConnectionEvent" body:@{@"name": @"connected"}];
