@@ -2,6 +2,8 @@ package nl.kega.reactnativerabbitmq;
 
 import android.util.Log;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -69,15 +71,25 @@ class RabbitMqConnection extends ReactContextBaseJavaModule  {
         this.factory.setPort(this.config.getInt("port"));
         this.factory.setAutomaticRecoveryEnabled(true);
         this.factory.setRequestedHeartbeat(10);
-   
-        try {
-            if (this.config.hasKey("ssl") && this.config.getBoolean("ssl")) {
-                this.factory.useSslProtocol();
-            }
-        } catch(Exception e) {
-            Log.e("RabbitMqConnection", e.toString());
-        }
 
+        if (this.config.hasKey("pck12Base64")) {
+            char[] keyPassphrase = this.config.getString("pck12Pwd").toCharArray();
+            KeyStore ks = KeyStore.getInstance("PKCS12");
+
+            byte[] decoded = android.util.Base64.decode(base64Cert, Base64.DEFAULT);
+            ks.load(new ByteArrayInputStream(decoded), keyPassphrase);
+
+            KeyManagerFactory kmf = KeyManagerFactory.getInstance("PKIX");
+            kmf.init(ks, keyPassphrase);
+
+            TrustManagerFactory tmf = TrustManagerFactory.getInstance("PKIX");
+            tmf.init(ks);
+
+            SSLContext c = SSLContext.getInstance("TLSv1.2");
+            c.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
+
+            factory.useSslProtocol(c);
+        }
     }
 
     @ReactMethod
